@@ -35,7 +35,7 @@ export const getOne = async (req, res) => {
             { _id: postId },
             { $inc: { viewsCount: 1 } },
             { new: true }  // Adaugă această opțiune pentru a obține documentul actualizat
-        ).exec();
+        ).populate('user').exec();
 
         if (!updatedPost) {
             return res.status(404).json({

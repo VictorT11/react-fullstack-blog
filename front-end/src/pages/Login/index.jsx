@@ -22,9 +22,19 @@ const dispatch = useDispatch();
     mode: 'onChange'
   })
 
-const onSubmit = (value) =>{
-  dispatch(fetchAuth(value));
+const onSubmit = async (value) =>{
+  const data = await dispatch(fetchAuth(value));
+
+  if(!data.payload){
+    return  alert('Unouthorized');
+  }
+
+ if('token' in data.payload){
+  window.localStorage.setItem('token', data.payload.token);
+ }
 }
+
+
 if(isAuth){
   return <Navigate to="/"/>
 }
@@ -51,7 +61,7 @@ if(isAuth){
       helperText={errors.password?.message}
       {...register('password', {required: " Insert Password"})} 
       fullWidth />
-      <Button type="submit" size="large" variant="contained" fullWidth>
+      <Button disabled={!isValid} type="submit" size="large" variant="contained" fullWidth>
         LogIn
       </Button>
     </form>
